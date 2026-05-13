@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050505;
+  --foreground: #ededed;
+  --neon-blue: 56 189 248;
+  --neon-violet: 168 85 247;
+  --neon-pink: 236 72 153;
+  --neon-emerald: 34 197 94;
+  --neon-amber: 251 146 60;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
+html, body {
+  background: #050505;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Premium glass surface — frosted, with top sheen + inner ring */
+.glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.015) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 24px 60px -24px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+}
+
+.glass-strong {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 32px 80px -32px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+}
+
+/* Neon ring + glow when an element is selected/active */
+.neon-ring-blue {
+  border-color: rgba(var(--neon-blue), 0.45);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(var(--neon-blue), 0.25),
+    0 0 40px -8px rgba(var(--neon-blue), 0.55);
+}
+.neon-ring-violet {
+  border-color: rgba(var(--neon-violet), 0.45);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(var(--neon-violet), 0.3),
+    0 0 50px -8px rgba(var(--neon-violet), 0.55);
+}
+.neon-ring-pink {
+  border-color: rgba(var(--neon-pink), 0.45);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(var(--neon-pink), 0.3),
+    0 0 50px -8px rgba(var(--neon-pink), 0.55);
+}
+.neon-ring-emerald {
+  border-color: rgba(var(--neon-emerald), 0.45);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(var(--neon-emerald), 0.28),
+    0 0 50px -8px rgba(var(--neon-emerald), 0.5);
+}
+.neon-ring-amber {
+  border-color: rgba(var(--neon-amber), 0.5);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(var(--neon-amber), 0.3),
+    0 0 50px -8px rgba(var(--neon-amber), 0.55);
+}
+
+/* Pulsing dot for live indicators */
+@keyframes neon-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.85); }
+}
+.neon-pulse { animation: neon-pulse 1.6s ease-in-out infinite; }
+
+/* Slow drift for ambient gradients */
+@keyframes ambient-drift {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(2%, -2%, 0) scale(1.05); }
+}
+.ambient-drift { animation: ambient-drift 14s ease-in-out infinite; }
+
+/* Subtle grain overlay */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* Tight tracking for display headings */
+.display { letter-spacing: -0.03em; font-feature-settings: "ss01", "cv11"; }
+
+/* Custom thin scrollbar inside glass surfaces */
+.thin-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; }
+.thin-scroll::-webkit-scrollbar-track { background: transparent; }
+
+::selection {
+  background: rgba(168, 85, 247, 0.35);
+  color: #fff;
 }
