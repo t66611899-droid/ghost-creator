@@ -152,6 +152,41 @@ const stylePresets: Record<string, StyleConfig> = {
     },
   },
 
+  hvac: {
+    name: 'HVAC / Trades',
+    description: 'High-contrast bold captions for trade service content — maximum legibility on job-site footage',
+    niche: 'hvac',
+    caption: {
+      fontFamily: 'Arial Black',
+      fontSize: 60,
+      bold: true,
+      color: '#FFFF00',
+      backgroundColor: '#000000',
+      opacity: 0.95,
+      borderStyle: 3,
+      borderWidth: 3,
+      shadowDepth: 5,
+      alignment: 'center',
+    },
+    video: {
+      aspectRatio: '9:16',
+      backgroundColor: '#0A0A0A',
+      maxBrightness: 1.2,
+      vibrance: 1.1,
+      saturation: 1.05,
+    },
+    animation: {
+      wordHighlightColor: '#FFFF00',
+      wordHighlightDuration: 180,
+      captionFadeInDuration: 120,
+      captionFadeOutDuration: 100,
+    },
+    audio: {
+      duckingAmount: 0.5,
+      duckingThreshold: -22,
+    },
+  },
+
   vibrant: {
     name: 'Vibrant',
     description: 'Colorful, energetic captions for entertainment content',

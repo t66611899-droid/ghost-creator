@@ -21,12 +21,27 @@ import {
 
 import { generateCompleteAudioFilterChain } from './audio-ducking';
 
+import {
+  buildRampZones,
+  buildSpeedRampFilterGraph,
+  getRampDiagnostics,
+  DEFAULT_RAMP_CONFIG,
+  type SpeedRampConfig,
+  type RampZone,
+  type RampDiagnostics,
+  type RevealIntensity,
+} from './speed-ramp';
+
 export interface PipelineConfig {
   silenceThreshold: number;
   style: string;
   wordsPerCue: number;
   audioReduceFactor: number;
   outputDir: string;
+  /** When provided, generates speed-ramp data. Auto-enabled for the 'barber' style. */
+  speedRamp?: Partial<SpeedRampConfig>;
+  /** Per-segment reveal intensities for the Blubarber Edge zoom. */
+  revealIntensities?: RevealIntensity[];
 }
 
 export interface PipelineOutput {
@@ -44,6 +59,12 @@ export interface PipelineOutput {
   ffmpegFilters: {
     video: string;
     audio: string;
+  };
+  /** Populated when speedRamp is enabled or style === 'barber'. */
+  speedRamp?: {
+    zones: RampZone[];
+    filterGraph: string;
+    diagnostics: RampDiagnostics;
   };
 }
 
@@ -92,6 +113,18 @@ export function orchestratePipeline(
     config.audioReduceFactor
   );
 
+  // Speed ramp — auto-enabled for 'barber' style; can be explicitly opt-in for others
+  const rampEnabled = config.style === 'barber' || config.speedRamp !== undefined;
+  let speedRamp: PipelineOutput['speedRamp'];
+
+  if (rampEnabled) {
+    const rampConfig = { ...DEFAULT_RAMP_CONFIG, ...config.speedRamp };
+    const zones = buildRampZones(speechSegments, rampConfig, config.revealIntensities);
+    const filterGraph = buildSpeedRampFilterGraph(zones, rampConfig);
+    const diagnostics = getRampDiagnostics(speechSegments, zones);
+    speedRamp = { zones, filterGraph, diagnostics };
+  }
+
   return {
     speechSegments,
     silenceGaps,
@@ -102,6 +135,7 @@ export function orchestratePipeline(
       video: videoFilter,
       audio: audioFilter,
     },
+    speedRamp,
   };
 }
 
