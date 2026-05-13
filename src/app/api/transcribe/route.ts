@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { TranscriptionResponse, ErrorResponse } from '@/types/api';
+import type { TranscriptionResponse, ErrorResponse } from '@/types/api';
+import { processTranscription } from '../../../../lib/transcription-processor';
+
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,14 +21,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!file.type.startsWith('video/')) {
+    if (!file.type.startsWith('video/') && !file.type.startsWith('audio/')) {
       return NextResponse.json<ErrorResponse>(
-        { error: 'File must be a video' },
+        { error: 'File must be a video or audio file' },
         { status: 400 }
       );
     }
 
-    const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json<ErrorResponse>(
         { error: 'File too large. Maximum size is 100MB.' },
@@ -33,17 +35,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert File to Buffer for OpenAI
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const transcription = await openai.audio.transcriptions.create({
+    const whisperResponse = await openai.audio.transcriptions.create({
       file: new File([buffer], file.name, { type: file.type }),
       model: 'whisper-1',
-      language: 'en', // Assuming English, can make configurable
+      response_format: 'verbose_json',
+      timestamp_granularities: ['word'],
     });
 
+    const result = processTranscription(whisperResponse as Parameters<typeof processTranscription>[0]);
+
+    if (!result.success) {
+      return NextResponse.json<ErrorResponse>(
+        {
+          error: result.error.message,
+          code: result.error.code,
+          details: result.error.details,
+        },
+        { status: 422 }
+      );
+    }
+
     return NextResponse.json<TranscriptionResponse>({
-      transcription: transcription.text,
+      transcription: result.data.text,
+      words: result.data.words,
+      wordCount: result.data.wordCount,
+      duration: result.data.duration,
+      language: result.data.language,
+      isRTL: result.data.isRTL,
     });
   } catch (error) {
     console.error('Transcription error:', error);
