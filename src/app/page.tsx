@@ -2,277 +2,214 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Video, Zap, Users, Sparkles, ArrowRight, Check } from 'lucide-react';
+import type { Transition } from 'framer-motion';
+import { Scissors, ArrowRight, BookOpen, Target } from 'lucide-react';
+import HeroGeometric from '@/components/ui/shape-landing-hero';
+import { useSuiteStore } from '@/store/useSuiteStore';
+
+const spring: Transition = { type: 'spring', stiffness: 100, damping: 20 };
 
 export default function Home() {
+  const profile = useSuiteStore((s) => s.profile);
+  const previewMissions = profile.contentPlan.slice(0, 9);
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-pink-600/20" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Ghost Creator
-              </span>
-            </h1>
-            <p className="text-xl sm:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              AI-powered video content creation for local businesses.
-              Transform your ideas into viral-ready videos in minutes.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/upload"
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
-              >
-                Start Creating <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-              <button className="inline-flex items-center px-8 py-4 border border-gray-600 rounded-lg font-semibold text-lg hover:bg-gray-800 transition-colors">
-                Watch Demo
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+    <div className="relative">
 
-      {/* Features Section */}
-      <section className="py-24 bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
+      {/* Floating top nav — sits above the HeroGeometric and R3F canvas */}
+      <nav
+        className="fixed top-0 left-0 right-0 flex items-center justify-between px-8 py-5 z-30"
+        style={{
+          background: 'rgba(10,10,10,0.55)',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+        }}
+      >
+        <div className="flex items-center gap-2.5">
+          <div
+            className="w-7 h-7 rounded-lg flex items-center justify-center"
+            style={{ background: 'rgba(234,88,12,0.14)', border: '1px solid rgba(234,88,12,0.30)' }}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Powerful Features for Modern Businesses
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Everything you need to create engaging video content that drives results.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Video,
-                title: 'AI Video Creation',
-                description: 'Generate professional videos from text, images, or voice recordings using advanced AI.'
-              },
-              {
-                icon: Zap,
-                title: 'Lightning Fast',
-                description: 'Create high-quality videos in minutes, not hours. Perfect for busy entrepreneurs.'
-              },
-              {
-                icon: Sparkles,
-                title: 'Social Media Ready',
-                description: 'Optimized for TikTok, Instagram, and all major platforms with perfect aspect ratios.'
-              },
-              {
-                icon: Users,
-                title: 'Team Collaboration',
-                description: 'Share projects with your team and collaborate on video creation seamlessly.'
-              },
-              {
-                icon: Check,
-                title: 'Professional Quality',
-                description: 'Hollywood-grade effects and transitions without the expensive equipment.'
-              },
-              {
-                icon: ArrowRight,
-                title: 'Easy Export',
-                description: 'Download in any format or directly publish to social media platforms.'
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-gray-700 rounded-lg p-6 hover:bg-gray-600 transition-colors"
-              >
-                <feature.icon className="w-12 h-12 text-blue-400 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
-              </motion.div>
-            ))}
+            <Scissors className="w-3.5 h-3.5" style={{ color: '#EA580C' }} />
           </div>
+          <span className="text-sm font-black tracking-tight text-white">GHOST CREATOR</span>
         </div>
-      </section>
 
-      {/* Pricing Section */}
-      <section className="py-24 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/media-vault"
+            className="text-xs font-semibold transition-colors px-3 py-1.5"
+            style={{ color: 'rgba(255,255,255,0.45)' }}
+          >
+            Vault
+          </Link>
+          <Link
+            href="/dashboard"
+            className="text-xs font-black uppercase tracking-widest text-white bg-[#EA580C] hover:bg-[#C2410C] px-4 py-2 rounded-lg transition-colors"
+          >
+            Open
+          </Link>
+        </div>
+      </nav>
+
+      {/* ─── Act 1: HeroGeometric (offset 0 → 0.3) ─────────────────────────── */}
+      <HeroGeometric
+        badge="BLUBARBER · BARBER · 2027"
+        title1="Build a"
+        title2="30-Day Content Empire"
+        subtitle="Pre-loaded with the Blubarber roadmap — 30 viral-ready barber missions, each engineered with Reveal Flash, 1.2× keyword zoom, and Hormozi-style captions. Scroll to see your strategy."
+        primaryHref="/dashboard"
+        primaryLabel="Open Command Center"
+        secondaryHref="/media-vault"
+        secondaryLabel="Drop a Clip"
+      />
+
+      {/* ─── Act 2: Strategy Spotlight (offset 0.3 → 0.6) ───────────────────── */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 py-24">
+        <div className="max-w-3xl w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
+            viewport={{ once: true, margin: '-30%' }}
+            transition={spring}
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Simple, Transparent Pricing
+            <span
+              className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"
+              style={{ color: '#EA580C', background: 'rgba(234,88,12,0.10)', border: '1px solid rgba(234,88,12,0.20)' }}
+            >
+              Act II · The Strategy
+            </span>
+            <h2 className="text-4xl font-black tracking-tight text-white mt-5 leading-tight">
+              30 missions.<br />
+              <span style={{ color: '#EA580C' }}>Zero filler.</span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Choose the plan that fits your business. Start free and scale as you grow.
+            <p className="text-sm mt-4 max-w-xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+              Trust → Authority → Conversion. Each mission is a unique 30–60 second
+              video script with director notes engineered to stop a scroll within 2 seconds.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              {
-                name: 'Starter',
-                price: 'Free',
-                description: 'Perfect for trying out Ghost Creator',
-                features: [
-                  '5 videos per month',
-                  'Basic AI transcription',
-                  '720p export',
-                  'Watermark on videos',
-                  'Email support'
-                ],
-                cta: 'Get Started',
-                popular: false
-              },
-              {
-                name: 'Pro',
-                price: '$29',
-                period: '/month',
-                description: 'For growing businesses',
-                features: [
-                  'Unlimited videos',
-                  'Advanced AI features',
-                  '4K export',
-                  'No watermark',
-                  'Priority support',
-                  'Team collaboration',
-                  'Custom branding'
-                ],
-                cta: 'Start Pro Trial',
-                popular: true
-              },
-              {
-                name: 'Enterprise',
-                price: 'Custom',
-                description: 'For large organizations',
-                features: [
-                  'Everything in Pro',
-                  'White-label solution',
-                  'API access',
-                  'Dedicated support',
-                  'Custom integrations',
-                  'SLA guarantee'
-                ],
-                cta: 'Contact Sales',
-                popular: false
-              }
-            ].map((plan, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {previewMissions.map((m, i) => (
               <motion.div
-                key={plan.name}
-                initial={{ opacity: 0, y: 20 }}
+                key={m.day}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className={`relative bg-gray-800 rounded-lg p-8 ${
-                  plan.popular ? 'ring-2 ring-blue-500' : ''
-                }`}
+                viewport={{ once: true, margin: '-10%' }}
+                transition={{ ...spring, delay: 0.05 + i * 0.03 }}
+                className="rounded-2xl p-4 flex flex-col gap-2"
+                style={{
+                  background: 'rgba(10,10,10,0.55)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                }}
               >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <div className="text-4xl font-bold mb-2">
-                    {plan.price}
-                    {plan.period && <span className="text-lg text-gray-400">{plan.period}</span>}
-                  </div>
-                  <p className="text-gray-400">{plan.description}</p>
+                <div className="flex items-center justify-between">
+                  <span
+                    className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                    style={{ color: '#EA580C', background: 'rgba(234,88,12,0.10)', border: '1px solid rgba(234,88,12,0.20)' }}
+                  >
+                    Day {m.day}
+                  </span>
+                  <Target className="w-3 h-3" style={{ color: 'rgba(234,88,12,0.60)' }} />
                 </div>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center">
-                      <Check className="w-5 h-5 text-green-400 mr-3 flex-shrink-0" />
-                      <span className="text-gray-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
-                    plan.popular
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                      : 'bg-gray-700 hover:bg-gray-600 text-white'
-                  }`}
-                >
-                  {plan.cta}
-                </button>
+                <h3 className="text-xs font-black text-white leading-snug">{m.missionTitle}</h3>
+                <p className="text-[10px] leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  {m.hookScript}
+                </p>
               </motion.div>
             ))}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ ...spring, delay: 0.3 }}
+            className="mt-8 flex justify-center"
+          >
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold transition-colors"
+              style={{ color: 'rgba(255,255,255,0.55)' }}
+            >
+              See all 30 missions <ArrowRight className="w-3 h-3" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* ─── Act 3: Closing (offset 0.6 → 1.0) ──────────────────────────────── */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 py-24">
+        <div className="max-w-2xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '-30%' }}
+            transition={spring}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Ready to Transform Your Content Creation?
+            <span
+              className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"
+              style={{ color: '#EA580C', background: 'rgba(234,88,12,0.10)', border: '1px solid rgba(234,88,12,0.20)' }}
+            >
+              Act III · Ignition
+            </span>
+
+            <h2 className="text-4xl font-black tracking-tight text-white mt-5 leading-tight">
+              Drop a clip.<br />
+              <span style={{ color: '#EA580C' }}>The engine does the rest.</span>
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of businesses using Ghost Creator to create amazing video content.
-              Start your free trial today.
+
+            <p className="text-sm mt-4 max-w-lg mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+              Dead air purged. Captions burnt in Vivid Orange. Reveal Flash on every
+              sentence. 1.2× zoom on every impact word. Output in 9:16. Built for
+              the Blubarber chair, weaponized for everyone else.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+            <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
-                href="/upload"
-                className="inline-flex items-center px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors transform hover:scale-105"
+                href="/media-vault"
+                className="inline-flex items-center gap-2 bg-[#EA580C] hover:bg-[#C2410C] text-white font-black text-sm uppercase tracking-widest py-3.5 px-8 rounded-xl transition-colors"
+                style={{ boxShadow: '0 8px 32px rgba(234,88,12,0.25)' }}
               >
-                Start Creating Now <ArrowRight className="ml-2 w-5 h-5" />
+                Drop Your First Clip
+                <ArrowRight className="w-4 h-4" />
               </Link>
-              <button className="inline-flex items-center px-8 py-4 border border-white text-white rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors">
-                Schedule Demo
-              </button>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm font-semibold rounded-xl px-6 py-3 transition-colors"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <BookOpen className="w-4 h-4" /> View the Missions
+              </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex justify-center items-center mb-4">
-              <Video className="w-8 h-8 text-blue-400 mr-2" />
-              <span className="text-2xl font-bold">Ghost Creator</span>
-            </div>
-            <p className="text-gray-400 mb-4">
-              © 2026 Ghost Creator. All rights reserved.
-            </p>
-            <div className="flex justify-center space-x-6">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">Terms</a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">Support</a>
-            </div>
-          </div>
-        </div>
+      <footer
+        className="relative flex items-center justify-between px-8 py-5 z-20"
+        style={{
+          background: 'rgba(10,10,10,0.40)',
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+        }}
+      >
+        <span className="text-[10px] font-semibold uppercase tracking-[0.15em]" style={{ color: 'rgba(255,255,255,0.25)' }}>
+          © 2026 Ghost Creator
+        </span>
+        <span className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.20)' }}>
+          Blubarber · Deepgram · OpenRouter · FFmpeg
+        </span>
       </footer>
     </div>
   );

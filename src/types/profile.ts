@@ -9,7 +9,8 @@ export type Tone =
   | 'Friendly & Warm'
   | 'Educational & Expert'
   | 'Hype & Energy'
-  | 'Luxury & Aspirational';
+  | 'Luxury & Aspirational'
+  | 'Viral/Professional';
 
 // ─── 30-day roadmap mission ───────────────────────────────────────────────────
 
