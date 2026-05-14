@@ -1,28 +1,28 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Rubik } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import SuiteShell from "@/components/nav/SuiteShell";
 import R3FBackground from "@/components/3d/R3FBackground";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Premium serif — primary brand voice
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Technical micro-typography only (filenames, timestamps, kbd labels)
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const rubik = Rubik({
-  variable: "--font-rubik",
-  subsets: ["latin", "hebrew"],
-  weight: ["700", "900"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Ghost Creator",
-  description: "AI-powered video content creation for local businesses",
+  title: "Blubarber — Professional Video Editing for the Modern Barber",
+  description: "High-end video editing platform for the modern barber.",
 };
 
 export default function RootLayout({
@@ -33,10 +33,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${rubik.variable} h-full antialiased dark`}
+      className={`${cormorant.variable} ${inter.variable} h-full antialiased dark`}
     >
-      <body className="h-full" style={{ background: '#0A0A0A' }}>
-        {/* Z-0: persistent R3F scroll-aware background */}
+      <body
+        className="h-full"
+        style={{
+          background: '#0A0A0A',
+          fontFamily: 'var(--font-cormorant), Cormorant Garamond, serif',
+          color: '#FFFFFF',
+        }}
+      >
+        {/* Z-0: persistent R3F liquid-glass background */}
         <R3FBackground />
 
         {/* Z-10+: app content */}

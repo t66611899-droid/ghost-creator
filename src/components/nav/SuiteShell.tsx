@@ -1,19 +1,15 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import type { Transition } from 'framer-motion';
 import { X } from 'lucide-react';
 import GlobalSidebar from './GlobalSidebar';
 import { useSuiteStore } from '@/store/useSuiteStore';
 
-const _spring: Transition = { type: 'spring', stiffness: 100, damping: 20 };
-
-// Pages that show the sidebar shell
-const SHELL_ROUTES = ['/dashboard', '/strategy', '/media-vault'];
+// Routes that render inside the sidebar shell
+const SHELL_ROUTES = ['/dashboard'];
 
 function ShellHeader() {
   const router = useRouter();
-  const pathname = usePathname();
   const { resetAll } = useSuiteStore();
 
   const handleReset = () => {
@@ -21,44 +17,40 @@ function ShellHeader() {
     router.push('/');
   };
 
-  const label = pathname.startsWith('/dashboard')
-    ? 'Command Center'
-    : pathname.startsWith('/strategy')
-    ? 'Strategy'
-    : pathname.startsWith('/media-vault')
-    ? 'Media Vault'
-    : 'Ghost Creator';
-
   return (
     <header
-      className="flex items-center justify-between px-5 py-3 shrink-0 relative z-50"
+      className="flex items-center justify-end px-8 py-3 shrink-0 relative"
       style={{
-        background: 'rgba(10,10,10,0.50)',
+        background: 'rgba(10,10,10,0.40)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        borderBottom: '1px solid rgba(255,255,255,0.04)',
+        zIndex: 50,
       }}
     >
-      <div className="flex flex-col gap-1">
-        <span className="text-xs font-black text-white tracking-tight">{label}</span>
-      </div>
-
       <button
         onClick={handleReset}
-        className="flex items-center gap-1.5 group cursor-pointer"
-        title="Return Home & Reset"
+        className="flex items-center gap-2 cursor-pointer group"
+        title="Return Home"
       >
         <span
-          className="text-[10px] font-semibold uppercase tracking-wider transition-colors group-hover:text-white/60"
-          style={{ color: 'rgba(255,255,255,0.2)' }}
+          className="text-[9px] tracking-[0.28em] uppercase transition-colors"
+          style={{
+            color: 'rgba(255,255,255,0.32)',
+            fontFamily: 'var(--font-inter), sans-serif',
+            fontWeight: 600,
+          }}
         >
-          Reset
+          Clear
         </span>
         <div
-          className="w-5 h-5 rounded-md flex items-center justify-center transition-colors group-hover:bg-white/[0.08]"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+          className="w-5 h-5 rounded-md flex items-center justify-center transition-colors"
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.10)',
+          }}
         >
-          <X className="w-3 h-3" style={{ color: 'rgba(255,255,255,0.3)' }} />
+          <X className="w-3 h-3" style={{ color: 'rgba(255,255,255,0.45)' }} />
         </div>
       </button>
     </header>
@@ -70,7 +62,7 @@ export default function SuiteShell({ children }: { children: React.ReactNode }) 
   const isShellRoute = SHELL_ROUTES.some((r) => pathname.startsWith(r));
 
   if (!isShellRoute) {
-    // Landing page — full-bleed, no sidebar (the R3F bg lives behind the children)
+    // Landing — full-bleed, no sidebar
     return <>{children}</>;
   }
 
